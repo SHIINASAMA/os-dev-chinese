@@ -549,7 +549,7 @@ int 0x10
 jmp $
 
 the_secret:
-	db "X"
+    db "X"
 
 times 510-($-$$) db 0
 dw 0xaa55
@@ -603,7 +603,7 @@ b4 0e b0 1e cd 10 a0 1e 00 cd 10 bb 1e 00 81 c3
 
 ```assembly
 my_string:
-	db 'Booting OS'
+    db 'Booting OS'
 ```
 
 我们可以看到 `db`，它翻译为 “声明字节数据”，告诉汇编程序将后续字节直接写入二进制输出文件（即不将其解释为处理器指令）。由于我们用引号包围了数据，汇编程序知道将每个字符串转换为它的 ASCII 字节码。注意，我们通常使用标签（例如：my_string）来标记数据的开始，否则我们将无法在代码中引用它。
@@ -612,7 +612,7 @@ my_string:
 
 ```assembly
 my_string:
-	db 'Booting OS', 0
+    db 'Booting OS', 0
 ```
 
 在之后遍历字符串，需要依次打印字符串的每个字符时，我们便可以很简单的确定字符串何处结束。
@@ -636,24 +636,24 @@ my_string:
 
 mov ah, 0x0e
 
-mov bp, 0x8000 		; 设置栈的底部在内存中较高一些的位置，
-mov sp, bp	   		; 这样不会覆盖我们的启动引导扇区
+mov bp, 0x8000         ; 设置栈的底部在内存中较高一些的位置，
+mov sp, bp             ; 这样不会覆盖我们的启动引导扇区
 
-push 'A'	   		; 将一些字符推入栈以供后面检索
-push 'B'	   		; 记住，这将会将其作为 16 位字节推入,
-push 'C'	   		; 所以最高位会被我们的汇编器设置为 0x00
+push 'A'               ; 将一些字符推入栈以供后面检索
+push 'B'               ; 记住，这将会将其作为 16 位字节推入,
+push 'C'               ; 所以最高位会被我们的汇编器设置为 0x00
 
-pop bx		   		; 记住，我们只能弹出 16 位字节，所以弹出至 bx，
-mov al, bl	   		; 然后将 bl 复制到 al
-int 0x10       		; print(al)
+pop bx                 ; 记住，我们只能弹出 16 位字节，所以弹出至 bx，
+mov al, bl             ; 然后将 bl 复制到 al
+int 0x10               ; print(al)
 
-pop bx		   		; 弹出下一个值
+pop bx                 ; 弹出下一个值
 mov al, bl
-int 0x10	   		; print(al)
+int 0x10               ; print(al)
 
-mmov al, [0x7ffe] 	; 证明堆栈从 bp 向下增长
-	    		  	; 获取 0x8000 - 0x2 处的字符
-int 0x10		  	; print(al)
+mov al, [0x7ffe]       ; 证明栈从 bp 向下增长
+                       ; 获取 0x8000 - 0x2 处的字符
+int 0x10               ; print(al)
 
 jmp $
 
